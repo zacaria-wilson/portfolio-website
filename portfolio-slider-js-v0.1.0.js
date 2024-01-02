@@ -16,7 +16,7 @@
 */
 
 //https://github.com/zacaria-wilson/portfolio-website/blob/main/potfolio-slider-js-v02.js
-https://github.com/zacaria-wilson/portfolio-website/blob/ee5140a3c04728074d63ad955d955a1a027bd108/potfolio-slider-js-v02.js
+//https://github.com/zacaria-wilson/portfolio-website/blob/ee5140a3c04728074d63ad955d955a1a027bd108/potfolio-slider-js-v02.js
 //https://cdn.jsdelivr.net/gh/user/repo@version/file
 //https://cdn.jsdelivr.net/gh/zacaria-wilson/portfolio-website/blob/main/potfolio-slider-js-v02.js
 
