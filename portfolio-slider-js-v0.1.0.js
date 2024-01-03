@@ -143,7 +143,7 @@ $(document).ready(function () {
             Slider(swiper2).slidePrev();
         });
 
-        nextArrowArrow.addEventListener('click', function(){
+        nextArrow.addEventListener('click', function(){
             Slider(swiper1).slideNext();
             Slider(swiper2).slideNext();
         });
