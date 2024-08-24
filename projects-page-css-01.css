@@ -1,0 +1,54 @@
+
+.is-slider-main .slider-slide {
+    opacity:0;
+    transform:translate(0,0);
+    transition:opacity 0s ease-in-out, transform 0s ease-in-out;
+}
+
+.is-slider-main .active-slide{
+    opacity:1;
+    transform:translate(0,0);
+    transition:opacity 0.5s ease-in-out, transform .5s ease-in-out;
+}
+
+.is-slider-sidebar .slider-slide {
+    opacity:0;
+    transform:translate(0,100%);
+    transition:opacity 0s ease-in-out, transform 0s ease-in-out;
+}
+
+.is-slider-sidebar .active-slide{
+    opacity:1;
+    transform:translate(0,0);
+    transition:opacity .5s ease-in-out, transform .5s ease-in-out;
+}
+
+ .slider-slide .prev-slide{
+    transform:translate(0,-100%);
+    transition:opacity 5s ease-in-out, transform 5s ease-in-out;
+}
+ .slider-slide .next-slide{
+    transition:opacity 5s ease-in-out, transform 5s ease-in-out;
+}
+
+.project-desc-wrap.closed {
+    opacity:0;
+}
+
+.unfold-arrow.closed{
+    transform:rotateX(0deg)
+}
+
+/*
+
+.is-slider-main .prev-slide{
+    transform:translate(0,-100%);
+    transition:opacity 0.5s ease-in-out, transform .5s ease-in-out;
+}
+.is-slider-main .next-slide{
+    transform:translate(0,100%);
+    transition:opacity 0.5s ease-in-out, transform .5s ease-in-out;
+}
+
+
+*/
