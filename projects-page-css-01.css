@@ -31,9 +31,6 @@
     transition:opacity 5s ease-in-out, transform 5s ease-in-out;
 }
 
-.project-desc-wrap.closed {
-    opacity:0;
-}
 
 .unfold-arrow.closed{
     transform:rotateX(0deg)
@@ -48,6 +45,10 @@
 .is-slider-main .next-slide{
     transform:translate(0,100%);
     transition:opacity 0.5s ease-in-out, transform .5s ease-in-out;
+}
+
+.project-desc-wrap.closed {
+    opacity:0;
 }
 
 

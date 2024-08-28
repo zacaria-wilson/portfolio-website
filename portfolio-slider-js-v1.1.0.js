@@ -34,8 +34,10 @@ function contstructSliderClass() {
                 bulletsClass: { val: '.slider-pagination-bullet', acceptedTypes: ['string'] },
                 activeBulletClass: { val: 'active-bullet', acceptedTypes: ['string'] },
                 bulletIndexAttribute: { val: 'bullet-index', acceptedTypes: ['string'] },
-                unfoldButton: {val:'.unfold-arrow', acceptedTypes:['string']},
-                slideTextClass: {val:'.project-desc-wrap', acceptedTypes:['string']},
+                unfoldButtons: { val: '.unfold-arrow', acceptedTypes: ['string'] },
+                unfoldIndexAttribute: { val: 'unfold-index', acceptedTypes: ['string'] },
+                slideTextClass: { val: '.project-desc', acceptedTypes: ['string'] },
+                slideTextWrapClass: { val: '.project-desc-wrap', acceptedTypes: ['string'] },
                 transitionPoint: { val: window.innerHeight * 0.8, acceptedTypes: ['number'] },
                 slideMode: { val: 'scroll', acceptedTypes: ['string'] },
                 childSlider: {val: undefined, acceptedTypes:['object']}
@@ -62,6 +64,7 @@ function contstructSliderClass() {
                 //Indexes slides and bullets.
                 this.elementCounter(this.slides);
                 this.elementCounter(this.bullets);
+                this.elementCounter(this.unfoldButtons);
                 //Disables methods based on options configuration.
                 this.optionsConfig();
                 //init observers
@@ -73,7 +76,8 @@ function contstructSliderClass() {
                 //init arrows 
                 this.initArrows(this.slidePositions);
                 //init unfold button
-                this.initUnfoldButton();
+                this.initUnfoldButtons();
+                //check('unfold button init');
 
             } else {
                 eLog("Slider initialization aborted due to invalid options.");
@@ -109,8 +113,10 @@ function contstructSliderClass() {
             t.bulletIndexAttribute = o.bulletIndexAttribute.val;
             t.prevArrow = $(o.prevEl.val);
             t.nextArrow = $(o.nextEl.val);
-            t.unfoldButton = $(o.unfoldButton.val);
+            t.unfoldButtons = $(o.unfoldButtons.val, true);
+            t.unfoldIndexAttribute = o.unfoldIndexAttribute.val;
             t.slideText = $(o.slideTextClass.val, true)
+            t.slideTextWraps = $(o.slideTextWrapClass.val, true)
             t.sliderMode = o.slideMode.val;
             t.childSlider = o.childSlider.val;
         };
@@ -119,8 +125,12 @@ function contstructSliderClass() {
         elementCounter(l) {
             for (let i = 0; i < l.length; i++) { 
                 this.slides && l === this.slides ? l.item(i).setAttribute(this.slideIndexAttribute, i)
-                    : this.bullets && l === this.bullets ? l.item(i).setAttribute(this.bulletIndexAttribute, i)
-                        : eLog('could not count: ', l);
+                    
+                : this.bullets && l === this.bullets ? l.item(i).setAttribute(this.bulletIndexAttribute, i)
+                
+                : this.unfoldButtons && l === this.unfoldButtons ? l.item(i).setAttribute(this.unfoldIndexAttribute, i)
+                
+                : eLog('could not count: ', l);
             }
         };
 
@@ -167,7 +177,7 @@ function contstructSliderClass() {
             
             if (this.bullets.length < 1) { this.initBullets = function () { return; }; };
             if (!(this.prevArrow && this.nextArrow)) { this.initArrows = function () { return; };};
-            if (!this.unfoldButton) { this.initUnfoldButton = function () { return; }; };
+            if (this.unfoldButtons.length < 1) { this.initUnfoldButtons = function () { return; }; };
             if (this.slideText.length < 1) { 
                 check('text hide/show disabled on slider: ', this)
                 this.textHide = function () { return; };
@@ -218,8 +228,10 @@ function contstructSliderClass() {
             s.n.sIn = t + 1;
         }
 
-        startSlider(s,t){
-            this.assignPositions(s,t);
+        startSlider(s, t) {
+            this.slides.forEach((el) => { 
+                this.currentObserver.observe(el)
+            });
             this.sliderLink();
             this.addClasses(s);
             this.addClasses(this.bullets, t);
@@ -246,7 +258,7 @@ function contstructSliderClass() {
             
             this.scrollTo(t);
 
-            this.sliderSync(t)
+            //this.sliderSync(t)
 
             this.wrapperUpdateHeight(t);
 
@@ -259,18 +271,92 @@ function contstructSliderClass() {
         };
         
         slideTo(t) {
-            if(this.slides.item(t)) { check('sliding to:', this.slides.item(t).getAttribute('slide-index')); this.updateSlider(t);  }
+            if (this.slides.item(t)) {
+                check('sliding to:', this.slides.item(t).getAttribute('slide-index'));
+                this.updateSlider(t);
+            }
         };
 
         scrollTo(t) { 
             if(this.slides.item(t)) {
                 let y = this.slides.item(t).offsetTop
-                check('scrolling to slide: ', this.slides.item(t).getAttribute('slide-index'))
-                check(' at y: ', y);
+                check('scrolling to slide: ', this.slides.item(t).getAttribute('slide-index'),' at y: ', y)
                 window.scrollTo({top: y, behavior: 'smooth'})
                 //this.slides.item(t).scrollIntoView({block: 'start', behavior: "smooth"})
                 }; 
         };
+
+        //Defines Intersection Observer objects for next and prev slides. 
+        //Needed for scroll sliderMode instances to update slider position based on scroll position. 
+        initializeObservers(s) { 
+
+            this.currentObserver = new IntersectionObserver((entries) => {
+                let target = entries[0];
+                //check('observing:', target);
+                if (target.intersectionRatio > 0 && target.boundingClientRect.top > this.targetScrollPosition) {
+                    check('Top Observer Callback: current slide:', target.target.getAttribute('slide-index'), 'top is at:', target.boundingClientRect.top, ' top observer slideTo: ', s.p.sIn);
+                    this.slideTo(s.p.sIn);
+                };
+                if (target.intersectionRatio > 0 && target.boundingClientRect.bottom < this.targetScrollPosition) {
+                    check('Bottom Observer Callback: current slide:', target.target.getAttribute('slide-index'), 'bottom is at:', target.boundingClientRect.bottom, 'bottom observer slideTo: ', s.n.sIn);
+                    this.slideTo(s.n.sIn);
+                }; 
+
+                if (target.isIntersecting && target.boundingClientRect.bottom > this.targetScrollPosition && target.boundingClientRect.top <= this.targetScrollPosition) {
+                    this.assignPositions(s, target.target.getAttribute(this.slideIndexAttribute));
+                } else {
+                    this.currentObserver.unobserve(target);
+                };
+                
+
+            }, this.observerOptions); 
+            /*
+            this.nextObserver = new IntersectionObserver((entries) => {
+                let target = entries[0];
+                (target.intersectionRatio > 0 && target.boundingClientRect.top <= this.targetScrollPosition) && this.slideTo(s.n.sIn); 
+
+            }, this.observerOptions);
+
+            this.prevObserver = new IntersectionObserver((entries) => {
+                let target = entries[0];
+                (target.intersectionRatio > 0 && target.boundingClientRect.bottom >= this.targetScrollPosition) && this.slideTo(s.p.sIn);
+
+            }, this.observerOptions);
+            */
+        };
+
+        //Starts observation of targeted next and prev slides. 
+        //Needed to update observation target when slider position updates.
+        startObserving(s) {
+            //check('observing')
+            s.c.sEl && this.currentObserver.observe(s.c.sEl)
+            //s.n.sEl && this.nextObserver.observe(s.n.sEl);
+            //s.p.sEl && this.prevObserver.observe(s.p.sEl);
+        };
+
+        //Stops observation of targeted next and prev slides. 
+        //Needed to update observation target when slider position updates.
+        stopObserving(s) {
+            //check('unobserving')
+            s.c.sEl && this.currentObserver.unobserve(s.c.sEl)
+            //s.n.sEl && this.nextObserver.unobserve(s.n.sEl);
+            //s.p.sEl && this.prevObserver.unobserve(s.p.sEl);
+        };
+
+        sliderLink(){
+            let child = this.childSlider;
+            if (child) { child.parentSlider = this;}
+        }
+
+        //Synchronizes linked sliders.
+        sliderSync(t) {
+            let child = this.childSlider;
+            let parent = this.parentSlider;
+
+            if (child  && (child.slidePositions.c.sEl.getAttribute(child.slideIndexAttribute) != t )){ child.slideTo(t); }; 
+            if (parent && (parent.slidePositions.c.sEl.getAttribute(parent.slideIndexAttribute) != t)){ parent.slideTo(t); };
+        };
+
 
         //Adds event listeners to bullets to scroll to corresponding slide.
         //Remember to disable. See note above slideMode.
@@ -292,19 +378,22 @@ function contstructSliderClass() {
             check('wrapper height set to: ', h);
         };
 
-        descUpdateHeight(){
-            let slideH = this.slides.item(t).offsetHeight;
-            let descH = this.slideText.item(t).offsetHeight;
+        descUpdateHeight() {
+            let descWraps = this.slideTextWraps
+            descWraps.forEach((el, index) => {
+                let descH = this.slideText.item(index).getBoundingClientRect().height;
+                if (el.classList.contains('closed')){
+                    el.style.height = 0;
+                } else {
+                    //check('desc height is ',descH)
+                    el.style.height = `${descH}px`;;
+                }
+            });
 
-            let hDiff = slideH - descH;
-            if (descH > 0){
-                this.wrapperEl.style.height = slideH
-            } else {}
         };
         
         textHide() {
-            check('this.slideText is: ', this.slideText)
-            this.slideText.forEach((el) => {
+            this.slideTextWraps.forEach((el) => {
                 if (!el.classList.contains('closed')) {
                     el.classList.add('closed');
                 } else {eLog(' class closed already on: ', el)};
@@ -312,9 +401,8 @@ function contstructSliderClass() {
         };
 
         textShow() {
-            this.slideText.forEach((el) => {
+            this.slideTextWraps.forEach((el) => {
                 if (el.classList.contains('closed')) {
-                        
                     el.classList.remove('closed');
                 } else {
                     eLog('no slide text closed')};
@@ -324,84 +412,33 @@ function contstructSliderClass() {
 
         //Adds event listener to description unfold button to update the description elements state-based classes. 
         //Needed to show/hide description with button (for mobile)
-        initUnfoldButton() {
-            let uB = this.unfoldButton;
-            uB.addEventListener('click', (event) => { 
-                if (uB.classList.contains('closed')){
-                    check('uB classList is:', uB.classList)
-                    check('uB.classList.contains(closed) is:', uB.classList.contains('closed'))
-                    uB.classList.remove('closed');
-                    this.textShow();
-                } else {
-                    check()
-                    uB.classList.add("closed");
-                    this.textHide();
-                };
+        initUnfoldButtons() {
+            //check('start initUnfoldButtons')
+            let uB = this.unfoldButtons;
+            //check('uB is: ', uB);
+
+            uB.forEach((el,index) => { 
+                el.addEventListener('click', (e) => {
+                    check('uB el is :', el);
+                    if (el.classList.contains('closed')){
+                        //check('uB classList is:', uB.classList)
+                        //check('uB.classList.contains(closed) is:', uB.classList.contains('closed'))
+                        el.classList.remove('closed');
+                        this.textShow();
+                        
+                    } else {
+                        check()
+                        el.classList.add("closed");
+                        this.textHide();
+                    };
+                    this.descUpdateHeight()
+                    this.wrapperUpdateHeight(index)
+                });
 
             });
-
+            this.descUpdateHeight()
             this.textShow();
         };
-
-        //Defines Intersection Observer objects for next and prev slides. 
-        //Needed for scroll sliderMode instances to update slider position based on scroll position. 
-        initializeObservers(s) { 
-
-            this.currentObserver = new IntersectionObserver((entries) => {
-                let target = entries[0];
-                //check('observing:', target);
-                if (target.intersectionRatio > 0 && target.boundingClientRect.top > this.targetScrollPosition)  { check('Top Observer Callback: current slide:', target.target.getAttribute('slide-index'), 'top is at:', target.boundingClientRect.top, ' top observer slideTo: ', s.p.sIn); this.slideTo(s.p.sIn) };
-                if (target.intersectionRatio > 0 && target.boundingClientRect.bottom < this.targetScrollPosition) { check('Bottom Observer Callback: current slide:', target.target.getAttribute('slide-index'), 'bottom is at:', target.boundingClientRect.bottom,'bottom observer slideTo: ', s.n.sIn); this.slideTo(s.n.sIn) }; 
-
-            }, this.observerOptions); 
-            /*
-            this.nextObserver = new IntersectionObserver((entries) => {
-                let target = entries[0];
-                (target.intersectionRatio > 0 && target.boundingClientRect.top <= this.targetScrollPosition) && this.slideTo(s.n.sIn); 
-
-            }, this.observerOptions);
-
-            this.prevObserver = new IntersectionObserver((entries) => {
-                let target = entries[0];
-                (target.intersectionRatio > 0 && target.boundingClientRect.bottom >= this.targetScrollPosition) && this.slideTo(s.p.sIn);
-
-            }, this.observerOptions);
-            */
-        };
-
-        //Starts observation of targeted next and prev slides. 
-        //Needed to update observation target when slider position updates.
-        startObserving(s) {
-            check('observing')
-            s.c.sEl && this.currentObserver.observe(s.c.sEl)
-            //s.n.sEl && this.nextObserver.observe(s.n.sEl);
-            //s.p.sEl && this.prevObserver.observe(s.p.sEl);
-        };
-
-        //Stops observation of targeted next and prev slides. 
-        //Needed to update observation target when slider position updates.
-        stopObserving(s) {
-            check('unobserving')
-            s.c.sEl && this.currentObserver.unobserve(s.c.sEl)
-            //s.n.sEl && this.nextObserver.unobserve(s.n.sEl);
-            //s.p.sEl && this.prevObserver.unobserve(s.p.sEl);
-        };
-
-        sliderLink(){
-            let child = this.childSlider;
-            if (child) { child.parentSlider = this;}
-        }
-
-        //Synchronizes linked sliders.
-        sliderSync(t) {
-            let child = this.childSlider;
-            let parent = this.parentSlider;
-
-            if (child  && (child.slidePositions.c.sEl.getAttribute(child.slideIndexAttribute) != t )){ child.slideTo(t); }; 
-            if (parent && (parent.slidePositions.c.sEl.getAttribute(parent.slideIndexAttribute) != t)){ parent.slideTo(t); };
-        };
-
-        
     };
     
     window.Slider = Slider;        
