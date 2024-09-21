@@ -1,24 +1,24 @@
 
 .is-slider-main .slider-slide {
-    opacity:0;
-    transform:translate(0,0);
-    transition:opacity 0s ease-in-out, transform 0s ease-in-out;
+    opacity:1;
+    
 }
 
 .is-slider-main .active-slide{
     opacity:1;
-    transform:translate(0,0);
-    transition:opacity 0.5s ease-in-out, transform .5s ease-in-out;
+    
 }
 
 .is-slider-sidebar .slider-slide {
     opacity:0;
+    z-index:1;
     transform:translate(0,100%);
     transition:opacity 0s ease-in-out, transform 0s ease-in-out;
 }
 
 .is-slider-sidebar .active-slide{
     opacity:1;
+    z-index:2;
     transform:translate(0,0);
     transition:opacity .5s ease-in-out, transform .5s ease-in-out;
 }
@@ -34,6 +34,10 @@
 
 .unfold-arrow.closed{
     transform:rotateX(0deg)
+}
+
+.project-desc-wrap.closed{
+    height:0px
 }
 
 /*

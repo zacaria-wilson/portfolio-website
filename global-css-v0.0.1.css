@@ -1,0 +1,11 @@
+.link-hover-ix-02:hover {
+        background-color: var(--cornflower-blue) ;
+      color: var(--white);
+      transition: background-color .4s ease-in-out;
+    }
+  
+    @media screen and (max-width: 767px){
+        :root{
+            --border-width-01: 2px
+        }
+      }
