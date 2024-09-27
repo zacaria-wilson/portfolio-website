@@ -4,8 +4,31 @@
       transition: background-color .4s ease-in-out;
     }
   
-    @media screen and (max-width: 767px){
-        :root{
-            --border-width-01: 2px
-        }
-      }
+@media screen and (max-width: 767px){
+    :root{
+        --border-width-01: 2px
+    }
+}
+
+.body {
+
+  &::-webkit-scrollbar {
+   width: 1em;
+   height: 0.5em;
+  }
+
+  &::-webkit-scrollbar-thumb {
+   background-color: #33333340;
+   border: 5px solid var(--white);
+   border-color: var(--white);
+   border-radius: 0px;
+    transition : border-color 5000ms ease-out;
+
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+      background-color: var(--offblack);
+      border:5px solid var(--offblack);
+  }
+
+}

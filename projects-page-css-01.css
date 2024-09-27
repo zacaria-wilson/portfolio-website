@@ -40,6 +40,28 @@
     height:0px
 }
 
+.project-desc-wrap {
+
+    &::-webkit-scrollbar {
+     width: 0.5em;
+     height: 0.5em;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+     background-color: #33333320;
+     border-radius: 3px;
+  
+     
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: var(--offblack);
+     
+        
+       }
+
+}
+  
 /*
 
 .is-slider-main .prev-slide{
