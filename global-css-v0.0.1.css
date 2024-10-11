@@ -1,9 +1,3 @@
-.link-hover-ix-02:hover {
-        background-color: var(--cornflower-blue) ;
-      color: var(--white);
-      transition: background-color .4s ease-in-out;
-    }
-  
 @media screen and (max-width: 767px){
     :root{
         --border-width-01: 2px
@@ -14,15 +8,16 @@
 
   &::-webkit-scrollbar {
    width: 1em;
-   height: 0.5em;
+   height: 1em;
+   background-color: transparent;
   }
 
   &::-webkit-scrollbar-thumb {
-   background-color: #33333340;
-   border: 5px solid var(--white);
+   background-color: #33333360;
+   border: 3px solid var(--white);
    border-color: var(--white);
-   border-radius: 0px;
-    transition : border-color 5000ms ease-out;
+   border-radius: 50px;
+   transition : border-color 5000ms ease-out;
 
   }
 
@@ -31,4 +26,10 @@
       border:5px solid var(--offblack);
   }
 
+}
+
+.link-hover-ix-02:hover {
+  background-color: var(--cornflower-blue) ;
+color: var(--white);
+transition: background-color .4s ease-in-out;
 }

@@ -37,7 +37,9 @@
 }
 
 .project-desc-wrap.closed{
-    height:0px
+    height:0px;
+    overflow:hidden;
+    padding-top:0px;
 }
 
 .project-desc-wrap {
@@ -46,13 +48,6 @@
      width: 0.5em;
      height: 0.5em;
     }
-  
-    &::-webkit-scrollbar-thumb {
-     background-color: #33333320;
-     border-radius: 3px;
-  
-     
-    }
 
     &::-webkit-scrollbar-thumb:hover {
         background-color: var(--offblack);
@@ -60,6 +55,14 @@
         
        }
 
+}
+
+.project-desc-wrap:hover {
+    &::-webkit-scrollbar-thumb {
+        background-color: #33333320;
+        border-radius: 3px;
+     
+       }
 }
   
 /*
