@@ -29,7 +29,16 @@
 }
 
 .link-hover-ix-02:hover {
-  background-color: var(--cornflower-blue) ;
+background-color: var(--cornflower-blue) ;
 color: var(--white);
 transition: background-color .4s ease-in-out;
+}
+
+.link-hover-ix-02:hover img{
+  filter: contrast(2) invert(1);
+}
+
+.navbar-brand:hover .logo-text{
+  color:var(--white);
+
 }

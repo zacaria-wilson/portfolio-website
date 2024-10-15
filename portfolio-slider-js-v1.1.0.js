@@ -16,7 +16,6 @@
 
             //#region Constructor
             constructor(containerID, passedOptions = {}) {
-                
                 //allows external reference to slider object
                 this.slider = this;
                 //useful for logging tests to know which slider is doing what.
@@ -1048,11 +1047,8 @@
 
         //#endregion
 
-
-
-        //??? why did I need this? Maybe it was for the heading hide animation I had planned.
-        window.Slider = Slider;        
-
+        //Defines slider class globally. Needed for creating Slider instances in onload code.
+        window.Slider = Slider;
     };
 
 
