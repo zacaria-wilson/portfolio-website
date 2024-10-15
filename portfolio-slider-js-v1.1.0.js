@@ -48,6 +48,7 @@
                     unfoldIndexAttribute: { val: 'unfold-index', acceptedTypes: ['string'] },
                     slideTextClass: { val: '.project-desc', acceptedTypes: ['string'] },
                     slideTextWrapClass: { val: '.project-desc-wrap', acceptedTypes: ['string'] },
+                    bulletedTextWraps: { val: '.project-process-wrap', acceptedTypes: ['string'] },
                     responsiveButtonClass: { val: '.responsive-display-icon', acceptedTypes: ['string'] },
                     transitionPoint: { val: window.innerHeight * 0.7, acceptedTypes: ['number'] },
                     slideMode: { val: 'scroll', acceptedTypes: ['string'] },
@@ -92,6 +93,7 @@
                         /*TODO: Currently the logic on determining which type of indexable elements are available in the particular Slider instance is defined either within the function or within the options config.
                         It should all be determined in the options config, for consistency.
                         */
+                        await this.removeEmptyText();
                         await this.elementCounter(this.slides);
                         await this.elementCounter(this.bullets);
                         await this.elementCounter(this.unfoldButtons);
@@ -171,6 +173,7 @@
                 t.unfoldIndexAttribute = o.unfoldIndexAttribute.val;
                 t.slideText = $(o.slideTextClass.val, true);
                 t.slideTextWraps = $(o.slideTextWrapClass.val, true);
+                t.textBulletWraps = $(o.bulletedTextWraps.val,true);
                 t.responsiveButtons = $(o.responsiveButtonClass.val, true, document);
                 t.mobileMode = false;
                 t.verticalLayout = false;
@@ -273,8 +276,15 @@
                         'updateUnfold'
                     );
                 };
+
+                if (this.textBulletWraps.length < 1) {
+                    disable(
+                        'removeEmptyText'
+                    );
+                    check(this.name,'disabled removeEmptyText')
+                };
                     
-            }
+            };
 
             
 
@@ -294,6 +304,19 @@
                     : eLog('could not count: ', l);
                 }
             };
+
+            //Hide Empty Bullets Project Desc
+            async removeEmptyText(){
+                //check('textBulletWraps is', this.textBulletWraps)
+                this.textBulletWraps.forEach(el=>{
+                    //check(this.name,'textBulletWraps el is', el)
+                    let bulletText = el.querySelector('.project-desc');
+                    if (bulletText.innerHTML.length < 1){
+                        el.style.display = "none";
+                        check(this.name,'removed empty bullet', el)
+                    }
+                })
+            }
 
             //Calcualtes observer intersection ratios based on slide height and target transition position, then pushes them to observer.options.threshold.
             async observerOptionsCalculator(){
@@ -475,6 +498,8 @@
                 } else {this.responsiveChange(false)}
 
             }
+
+            
 
             //#endregion
             

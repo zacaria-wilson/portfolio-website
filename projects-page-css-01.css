@@ -10,6 +10,7 @@
 }
 
 .is-slider-sidebar .slider-slide {
+    position: absolute;
     opacity:0;
     z-index:1;
     transform:translate(0,100%);
@@ -42,7 +43,7 @@
     padding-top:0px;
 }
 
-.project-desc-wrap {
+.project-info-wrap {
 
     &::-webkit-scrollbar {
      width: 0.5em;
@@ -57,14 +58,26 @@
 
 }
 
-.project-desc-wrap:hover {
+.project-info-wrap:hover {
     &::-webkit-scrollbar-thumb {
         background-color: #33333320;
-        border-radius: 3px;
+        border-radius: 0px;
      
        }
 }
-  
+
+.project-desc, .project-desc p{
+    font-size:1em;
+}
+ 
+.project-desc p:nth-child(2){
+    display:none;
+}
+
+.project-desc ul{
+    list-style-type: disc;
+    list-style-position: inside;
+}
 /*
 
 .is-slider-main .prev-slide{

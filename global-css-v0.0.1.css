@@ -16,7 +16,7 @@
    background-color: #33333360;
    border: 3px solid var(--white);
    border-color: var(--white);
-   border-radius: 50px;
+   border-radius: 0px;
    transition : border-color 5000ms ease-out;
 
   }
