@@ -37,10 +37,10 @@
     transform:rotateX(0deg)
 }
 
-.project-desc-wrap.closed{
+.project-desc-container.closed{
     height:0px;
     overflow:hidden;
-    padding-top:0px;
+    padding:0px;
 }
 
 .project-info-wrap {
