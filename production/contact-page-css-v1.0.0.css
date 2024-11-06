@@ -1,0 +1,13 @@
+:root{
+    --hero-bg-x-start: 80%;
+    --hero-bg-y-start: 70%;
+}
+
+@media screen and (max-width:767px) {
+    :root{
+        --hero-bg-x-start: 90%;
+    }
+}
+
+
+
