@@ -1,20 +1,17 @@
 # Changelog
 
-# 1.1.0 (2025-04-15)
+# 1.1.1 (2025-05-17)
 
 
 ### Meta
-
-- folders: moved page-specific resources (i.e. scripts and styles) to the /pages/ folder, with each page's resources in a sub-folder corresponding to the slug of the page URL.
-- file names: removed version numbers from file names. Instead, versioning will be enumerated in the branch name. 
-- readme: changed the README from .txt to .md, for improved structure and formatting.
-- changelog: added changelog. Future changes will be detailed here, rather than in commit descriptions.
-- todo: added todo file.
+- created swiper-child folder to contain SwiperChild build, 
 
 ### Features
 
-- projects-page-js (WIP): rebuilt project sliders using [Swiper.js](https://github.com/nolimits4web/swiper).
-- project-page-css (WIP): updated styles to work with projects-page-js. Refactored using nested styles.
-- home-page-js (WIP): added project sliders code for new projects section of home page. Removed old hero section line animation functionality.
-- home-page-css (WIP): updated styles to work with home-page-js. Refactored using nested styles.
-- contact: removed files for contact page, since no additional code is needed.
+- projects-page-js (WIP): rebuilt project sliders using SwiperChild. 
+- project-page-css (WIP): updated styles to work with projects-page-js.
+- home-page-js (WIP): rebuilt project sliders using SwiperChild.
+- home-page-css (WIP): updated styles to work with home-page-js.
+- /swiper-child/core/core.mjs (WIP): Created SwiperChild, a child class of the Swiper from [Swiper.js](https://github.com/nolimits4web/swiper).
+- /swiper-child/modules/* (WIP): created module .mjs scripts to add functionality to SwiperChild. Uses Swiper's module form, so can be passed in to Swiper.params.modules. Will detail functionality in later updates.
+- /swiper-child/swiper-utils/utils.mjs (WIP): created separate utils functions specifically for SwuiperChild. Was trying to automatically pass info about the Swiper and function in which the utils function is called. Currently not implemented. 
