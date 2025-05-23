@@ -1,5 +1,4 @@
 "use strict";
-import { cLog, eLog } from '../../global/utils/utils.js';
 import SwiperChild from '../../swiper-child/core/core.mjs';
 import DynamicSwiperHeight from '../../swiper-child/modules/dynamicSwiperHeight.mjs';
 import CustomThumbs from '../../swiper-child/modules/customThumbs.mjs';

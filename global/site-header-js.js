@@ -16,7 +16,6 @@
             const afterText = copyButton.getAttribute('data-submitted-text');
             const emailText = emailElement.innerText;
             el.addEventListener('click', (e) => {
-                console.log('Copy Email Button Clicked');
                 navigator.clipboard.writeText(emailText);
                 copyButton.innerText = afterText;
                 setTimeout(()=>{

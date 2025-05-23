@@ -1,4 +1,4 @@
-import { cLog, eLog, now } from "../swiper-utils/utils.mjs";
+import { cLog, eLog } from "../swiper-utils/utils.mjs";
 
 class SwiperChild extends Swiper{
     constructor(...args){
