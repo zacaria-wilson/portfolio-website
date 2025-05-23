@@ -1,5 +1,4 @@
-
-.content-slider{
+.content-swiper{
     &:not(.mobile-mode){
         & .swiper-slide{
         opacity:1;
@@ -32,7 +31,6 @@
                     padding-top: var(--_spacing-layout---p-10);
                     padding-bottom: var(--_spacing-layout---p-7);
                 }
-        
             }
         }
     }
@@ -40,23 +38,6 @@
     &.mobile-mode{
         & .project-pre-title{
             display: none;
-        }
-    }
-
-    
-}
-
-.image-slider{
-
-    &.mobile-mode{
-        display: none;
-    }
-
-    & .swiper-slide{
-        
-
-        &.auto-height{
-            height: var(--project-img-height)
         }
     }
 }

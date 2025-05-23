@@ -5,16 +5,22 @@
 
     function siteOnLoad(){
 
-        document.querySelector('[name ="viewport"]').setAttribute('content', 'width=device-width, initial-scale=1, minimum-scale=1');
+        //document.querySelector('[name ="viewport"]').setAttribute('content', 'width=device-width, initial-scale=1, minimum-scale=1');
 
         const copyEmailButtons = document.querySelectorAll('.copy-email');
         copyEmailButtons.forEach(el => {
+            const copyButton = el.querySelector('.copy-button');
+            const emailElement = el.querySelector('.contact-email-text');
+            if (!copyButton || !emailElement) return;
+            const beforeText = copyButton.innerText;
+            const afterText = copyButton.getAttribute('data-submitted-text');
+            const emailText = emailElement.innerText;
             el.addEventListener('click', (e) => {
-                console.log('Copy Email Button Clicked: ', el)
-                navigator.clipboard.writeText('zacaria.b.wilson@gmail.com');
-                el.innerText = 'Copied'
+                console.log('Copy Email Button Clicked');
+                navigator.clipboard.writeText(emailText);
+                copyButton.innerText = afterText;
                 setTimeout(()=>{
-                    el.innerText = 'Copy'
+                    copyButton.innerText = beforeText;
                 }, 1000)
             })
         })
@@ -29,12 +35,10 @@
 
     //Executes all functions in onloadList
     function executeOnLoad(){
-
         for (let i = 0; i< onloadList.length; i++){
             onloadList[i]();
         };
     };
-
 
     if (window.addEventListener){window.addEventListener("load", executeOnLoad, false)}
     else if (window.attachEvent){window.attachEvent("load", executeOnLoad)}

@@ -8,7 +8,7 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
 import IntersectionControls from '../../swiper-child/modules/intersectionControls.mjs';
 (() => {
   function initCSwipers(){
-    window.contentSwiper = new SwiperChild('.content-slider',
+    window.contentSwiper = new SwiperChild('.content-swiper',
       {
         name: 'content-swiper',
         direction: 'vertical',
@@ -16,7 +16,6 @@ import IntersectionControls from '../../swiper-child/modules/intersectionControl
         spaceBetween: 20,
         slideToClickedSlide: false,
         virtualTranslate: true,
-        //speed: 1000,
         
         dynamicSwiperHeight: {
           enabled: true,
@@ -33,7 +32,6 @@ import IntersectionControls from '../../swiper-child/modules/intersectionControl
           mobileModeClass: 'mobile-mode',
           breakpoints: {
             0: function(){
-              cLog('Breakpoint 0')
               this.params.slidesPerView = 'auto';
               this.params.virtualTranslate = false;
               this.dynamicSwiperHeight.disable();
@@ -43,7 +41,6 @@ import IntersectionControls from '../../swiper-child/modules/intersectionControl
             },
 
             991: function (){
-              cLog('Breakpoint 991')
               this.params.slidesPerView = 1;
               this.params.virtualTranslate = true;
               this.dynamicSwiperHeight.enable();
@@ -53,7 +50,6 @@ import IntersectionControls from '../../swiper-child/modules/intersectionControl
               
             },
           }
-
         },
 
         modules: [ DynamicSwiperHeight, CustomTranslate, CustomBreakpoints ],
@@ -75,32 +71,14 @@ import IntersectionControls from '../../swiper-child/modules/intersectionControl
             }
           }
         },
-
-        onAny(event, eventData){
-          //cLog('Event:', event);
-          //cLog('Event Data:', eventData);
-        }
-        
       }
     );
 
-    window.imageSwiper = new SwiperChild('.image-slider', 
+    window.imageSwiper = new SwiperChild('.image-swiper', 
       {
         direction: "vertical",
-    
         spaceBetween: 80, 
-
-        //freemode: true,
-
         slidesPerView: 'auto',
-
-        //virtualTranslate: true,
-
-        //cssMode: true,
-
-        //setWrapperSize: true,
-
-        //autoHeight: true,
         
         customThumbs: {
           enabled: true,
@@ -116,19 +94,19 @@ import IntersectionControls from '../../swiper-child/modules/intersectionControl
             threshold: 'auto'
           }
         },
-
-        breakpoints: {
+        
+        customBreakpoints:{
           enabled: true,
-          0: function(){
-            cLog('Breakpoint 0')
-            this.intersectionControls.disable();
-            this.customThumbs.disable();
-          },
+          breakpoints: {
+            0: function(){
+              this.intersectionControls.disable();
+              this.customThumbs.disable();
+            },
 
-          991: function (){
-            cLog('Breakpoint 991')
-            this.customThumbs.enable()
-            this.intersectionControls.enable();
+            991: function (){
+              this.customThumbs.enable()
+              this.intersectionControls.enable();
+            },
           },
         },
         
@@ -137,7 +115,5 @@ import IntersectionControls from '../../swiper-child/modules/intersectionControl
       }
     );
   };
-
   window.onloadList.push(initCSwipers);
-
 })();

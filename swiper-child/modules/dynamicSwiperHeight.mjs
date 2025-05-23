@@ -18,7 +18,6 @@ export default function DynamicSwiperHeight({ swiper, extendParams, on, emit }){
 
     const observer = new ResizeObserver((entries, observer) => {
         for (const entry of entries){
-            cLog('resize observer entry');
             const prevHeight = entry.target.getBoundingClientRect().height;
             let newHeight;
             let checkLimit = 0;
@@ -30,34 +29,28 @@ export default function DynamicSwiperHeight({ swiper, extendParams, on, emit }){
                         requestAnimationFrame(checkSize);
                     } else {
                         observer.unobserve(entry.target);
-                        cLog('heightResizeObserver: height resolved')
                         resizeSwiper();
                     }
                 }
-                
             }
             function waitForChange(){
                 setTimeout(checkSize, 100);
             }
-            
             requestAnimationFrame(waitForChange);
         }
     });
 
     function observe(){
-        cLog('dynamicSwiperHeight observe ', swiper);
         observer.observe(swiper.slides[swiper.realIndex]);
     }
 
     function resizeSwiper(){
         let activeSlideHeight = swiper.slides[swiper.realIndex].getBoundingClientRect().height; 
         swiperHeight = activeSlideHeight + ((swiper.inactiveSlideDimension() + swiper.params.spaceBetween) * (swiper.params.dynamicSwiperHeight.slidesPerView - 1));
-        cLog('DynamicSwiperHeight: resizeSwiper swiperHeight =', swiperHeight);
         swiper.el.style.height = swiperHeight + 'px';
     }
 
     function resizeSlides(){
-        cLog('DynamicSwiperHeight: resizeSlides')
         swiper.slides.forEach((slide) => {
             if (swiper.params.direction === 'vertical'){
                 slide.style.height = "";
@@ -67,59 +60,41 @@ export default function DynamicSwiperHeight({ swiper, extendParams, on, emit }){
         })
     }
 
-    function init(){
-        if (!swiper.params.dynamicSwiperHeight.enabled) return false;
-        resizeSwiper(swiper.slides[swiper.realIndex].getBoundingClientRect().height);
-    }
-
     function enable(){
-        if (swiper.params.dynamicSwiperHeight.enabled) return false;
-        swiper.params.dynamicSwiperHeight.enabled = true;
-        cLog('DynamicSwiperHeight: enabled');
+        if (swiper.dynamicSwiperHeight.enabled) return false;
+        resizeSwiper(swiper.slides[swiper.realIndex].getBoundingClientRect().height);
+        swiper.dynamicSwiperHeight.enabled = true;
         return true;
     };
 
     function disable(){
-        cLog('DynamicSwiperHeight: disabled');
-        if (!swiper.params.dynamicSwiperHeight.enabled) return false;
+        if (!swiper.dynamicSwiperHeight.enabled) return false;
         swiper.el.style.height = "";
-        swiper.params.dynamicSwiperHeight.enabled = false;
+        swiper.dynamicSwiperHeight.enabled = false;
         return true;
     };
     
     on('activeIndexChange', () => {
-        if (swiper.params.dynamicSwiperHeight.enabled) {
-            cLog('DynamicSwiperHeight: activeIndexChange', swiper.slides)
+        if (swiper.dynamicSwiperHeight.enabled) {
             observe();
         };
     });
 
     on('slidesUpdated', () => {
-        if (swiper.params.dynamicSwiperHeight.enabled) {
-            cLog('DynamicSwiperHeight: slidesUpdated')
+        if (swiper.dynamicSwiperHeight.enabled) {
             resizeSlides();
             resizeSwiper();
         };
     });
 
-    on('changeDirection', () => {
-        if (swiper.params.dynamicSwiperHeight.enabled) {
-            cLog('DynamicSwiperHeight: changeDirection')
-            //resizeSlides();
-            //resizeSwiper();
-        };
-    });
-
     on('init', () => {
         if (swiper.params.dynamicSwiperHeight.enabled) {
-            cLog('DynamicSwiperHeight: init');
             enable();
-            init();
         };
     });
 
     on('destroy', () => {
-        if (swiper.params.dynamicSwiperHeight.enabled) {
+        if (swiper.dynamicSwiperHeight.enabled) {
             disable();
         };
     });

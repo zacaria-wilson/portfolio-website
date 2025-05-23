@@ -1,5 +1,5 @@
 
-.content-slider{
+.content-swiper{
     &:not(.mobile-mode){
         & .swiper-slide{
         opacity:1;
@@ -40,23 +40,6 @@
     &.mobile-mode{
         & .project-pre-title{
             display: none;
-        }
-    }
-
-    
-}
-
-.image-slider{
-
-    &.mobile-mode{
-        display: none;
-    }
-
-    & .swiper-slide{
-        
-
-        &.auto-height{
-            height: var(--project-img-height)
         }
     }
 }

@@ -1,7 +1,6 @@
 import { cLog, eLog, now } from "../swiper-utils/utils.mjs";
 
 export default function CustomThumbs({ swiper, extendParams, on, emit }){
-    cLog('CustomThumbs')
     extendParams({
         customThumbs: {
             enabled: false,
@@ -19,18 +18,14 @@ export default function CustomThumbs({ swiper, extendParams, on, emit }){
     let controlSwiper;
 
     function handle(event){
-        //cLog('CustomThumbs: click handle', event.currentTarget, parseInt(event.currentTarget.getAttribute('data-hash')) - 1);
-        controlSwiper.slideTo(parseInt(event.currentTarget.getAttribute('data-hash')) - 1);
+        controlSwiper.slideTo(parseInt(event.currentTarget.getAttribute('data-hash')));
         emit('thumbClick', event);
     };
 
     function events(method){
-        cLog('CustomThumbs: events, method = ', method)
         if (thumbSwiper){
             thumbSwiper.slides.forEach((slide) => {
                 slide[method]('click', handle)
-                cLog('CustomThumbs: events, slide index =', slide.getAttribute('data-hash'))
-                //cLog('CustomThumbs: events, slide = ', slide);
             })
         } else {eLog('Error: CustomThumbs thumbSwiper missing')}
     };
@@ -38,35 +33,32 @@ export default function CustomThumbs({ swiper, extendParams, on, emit }){
     function init(){
         if (initialized) return false;
         thumbSwiper = swiper.params.customThumbs.swiper;
+        if (!thumbSwiper instanceof swiper.constructor || !thumbSwiper.initialized) return false;
         if (swiper.params.customThumbs.invert === true){
             controlSwiper = thumbSwiper;
         } else {
             controlSwiper = swiper;
         }
-        events('addEventListener');
         initialized = true;
-        cLog('CustomThumbs init')
         return true
     }
 
     function enable(){
-        if (swiper.params.customThumbs.enabled) return false;
+        if (swiper.customThumbs.enabled) return false;
         events('addEventListener');
-        swiper.params.customThumbs.enabled = true;
-        cLog('CustomThumbs: enabled')
+        swiper.customThumbs.enabled = true;
         return true;
     };
 
     function disable(){
         if (!swiper.params.customThumbs.enabled) return false;
         events('removeEventListener');
-        swiper.params.customThumbs.enabled = false;
+        swiper.customThumbs.enabled = false;
         return true;
     };
 
     on('activeIndexChange', () => {
-        if (swiper.params.customThumbs.enabled && thumbSwiper) {
-            cLog('CustomThumbs activeIndexChange', swiper.realIndex)
+        if (swiper.customThumbs.enabled && thumbSwiper) {
             thumbSwiper.slideTo(swiper.realIndex);
         };
     });
@@ -79,13 +71,12 @@ export default function CustomThumbs({ swiper, extendParams, on, emit }){
     });
 
     on('destroy', () => {
-        if (swiper.params.customThumbs.enabled) {
+        if (swiper.customThumbs.enabled) {
             disable();
         };
     });
 
     Object.assign(swiper.customThumbs, {
-        init,
         enable,
         disable,
     });

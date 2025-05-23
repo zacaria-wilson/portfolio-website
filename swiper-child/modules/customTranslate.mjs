@@ -20,13 +20,10 @@ export default function CustomTranslate({ swiper, extendParams, on, emit }){
         if (inactiveSlideDimension > 0){
             translate = -1 * (inactiveSlideDimension + swiper.params.spaceBetween) * Math.max(0, swiper.realIndex - swiper.params.customTranslate.offsetStart);
         }
-
         if (swiper.params.direction === 'vertical'){
-            cLog('translateWrapper: vertical', "0px " + translate.toString() + "px")
             swiper.wrapperEl.style.translate = "0px" + " " + translate.toString() + "px";
             return true;
         } else if (swiper.params.direction === 'horizontal') {
-            cLog('translateWrapper: horizontal', translate.toString() + "px 0px")
             swiper.wrapperEl.style.translate = translate.toString() + "px 0px";
             return true;
         } else return false;
@@ -34,41 +31,34 @@ export default function CustomTranslate({ swiper, extendParams, on, emit }){
     };
 
     function enable(){
-        if (swiper.params.customTranslate.enabled) return false;
-        swiper.params.customTranslate.enabled = true;
+        if (swiper.customTranslate.enabled) return false;
         swiper.wrapperEl.style.transform = "";
         translateWrapper();
-        cLog('customTranslate: enabled');
+        swiper.customTranslate.enabled = true;
         return true;
     };
 
     function disable(){
-        cLog('customTranslate: disabled');
-        if (!swiper.params.customTranslate.enabled) return false;
-        swiper.params.customTranslate.enabled = false;
+        if (!swiper.customTranslate.enabled) return false;
         swiper.wrapperEl.style.translate = "";
+        swiper.customTranslate.enabled = false;
         return true;
     };
     
     on('activeIndexChange', () => {
-        if (swiper.params.customTranslate.enabled) {
-            if (translateWrapper()){
-                cLog('custom translate: ', translate);
-            } else {
-                eLog('Error: custom tranlsate failed')
-            }
+        if (swiper.customTranslate.enabled) {
+            translateWrapper();
         };
     });
 
     on('init', () => {
         if (swiper.params.customTranslate.enabled) {
-            cLog('customTranslate: init');
             enable();
         };
     });
 
     on('destroy', () => {
-        if (swiper.params.customTranslate.enabled) {
+        if (swiper.customTranslate.enabled) {
             disable();
         };
     });

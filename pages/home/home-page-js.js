@@ -7,15 +7,13 @@ import CustomTranslate from '../../swiper-child/modules/customTranslate.mjs';
 import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs';
 (() => {
   function initCSwipers(){
-    window.contentSwiper = new SwiperChild('.content-slider',
+    window.contentSwiper = new SwiperChild('.content-swiper',
       {
-        name: 'content-swiper',
         direction: 'vertical',
         slidesPerView: 1,
         spaceBetween: 20,
         slideToClickedSlide: false,
         virtualTranslate: true,
-        //speed: 1000,
         
         dynamicSwiperHeight: {
           enabled: true,
@@ -32,7 +30,6 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
           mobileModeClass: 'mobile-mode',
           breakpoints: {
             0: function(){
-              cLog('Breakpoint 0')
               this.params.slidesPerView = 'auto';
               this.params.virtualTranslate = false;
               this.dynamicSwiperHeight.disable();
@@ -42,17 +39,14 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
             },
 
             991: function (){
-              cLog('Breakpoint 991')
               this.params.slidesPerView = 1;
               this.params.virtualTranslate = true;
               this.dynamicSwiperHeight.enable();
               this.customBreakpoints.changeClass('desktop');
               this.changeDirection('vertical');
               this.customTranslate.enable();
-              
             },
           }
-
         },
 
         modules: [ DynamicSwiperHeight, CustomTranslate, CustomBreakpoints ],
@@ -74,21 +68,13 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
             }
           }
         },
-
-        onAny(event, eventData){
-          //cLog('Event:', event);
-          //cLog('Event Data:', eventData);
-        }
-        
       }
     );
 
-    window.imageSwiper = new SwiperChild('.image-slider', 
+    window.imageSwiper = new SwiperChild('.image-swiper', 
       {
         direction: "vertical",
-    
         spaceBetween: 80, 
-    
         mousewheel: true,
         
         customThumbs: {
@@ -97,24 +83,9 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
         },
         
         modules: [ CustomThumbs ],
-
-        //customMousewheel: true,
-
-        /*
-        thumbs: {
-          swiper: contentSwiper,
-          multipleActiveThumbs: false,
-        },
-        */
-        //modules: [ CustomMousewheel ],
-
-          
-    
       }
     );
   };
 
-  //window.onloadList.push(createSwipers);
   window.onloadList.push(initCSwipers);
-
 })();

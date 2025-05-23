@@ -1,0 +1,9 @@
+.project-desc{
+    & ul{
+        display:flex;
+        flex-direction: column;
+        gap: var(--_spacing-layout---g-10);
+        padding-left: var(--_spacing-layout---p-20);
+        list-style-type: disc;
+    }
+}

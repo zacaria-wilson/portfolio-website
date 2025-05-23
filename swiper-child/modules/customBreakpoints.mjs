@@ -3,7 +3,6 @@ import { cLog, eLog, now } from "../swiper-utils/utils.mjs";
 export default function CustomBreakpoints({ swiper, extendParams, on, emit }){
     extendParams({
         customBreakpoints: {
-            enabled: false,
             mobileModeClass: null,
             breakpoints: {},
         },
@@ -13,67 +12,32 @@ export default function CustomBreakpoints({ swiper, extendParams, on, emit }){
         enabled: false,
     };
 
+    let initialized = false;
     let mobileClass;
     let breakpointsKeys = [];
     let sortedBreakpoints = [];
     
     function checkBreakpoint(){
         let windowWidth = window.innerWidth
-        cLog('checkBreakpoint windowWidth', windowWidth);
-        /*
-        let prev;
-        let next;
-        if (swiper.currentBreakpoint <= 1) {
-            prev = undefined
-        } else prev = breakpointsKeys.at(breakpointsKeys.indexOf(swiper.currentBreakpoint) - 1);
-        next = breakpointsKeys.at(breakpointsKeys.indexOf(swiper.currentBreakpoint) + 1);
-
-        cLog('CustomBreakpoints: checkBreakpoints prev =', prev, ' next = ', next, 'windowWidth', windowWidth);
-        cLog('breakpointsKeys index of current breakpoint = ', breakpointsKeys.indexOf(swiper.currentBreakpoint))
-        
-        if (!prev && windowWidth <= next){
-            swiper.currentBreakpoint = 1 ;
-            sortedBreakpoints[1]();
-            return true;
-        } else if (prev && windowWidth <= swiper.currentBreakpoint){
-            cLog('CustomBreakpoints: checkBreakpoint PREV')
-            swiper.currentBreakpoint = prev;
-            sortedBreakpoints[prev]();
-            return true;
-        } else if (next && windowWidth >= next){
-            cLog('CustomBreakpoints: checkBreakpoint NEXT')
-            swiper.currentBreakpoint = next;
-            sortedBreakpoints[next]();
-            return true;
-        } else return false;
-        */
-
         for (let i = 0; i < breakpointsKeys.length; i++){
             if (windowWidth >= breakpointsKeys[i]){
                 let next = breakpointsKeys[i + 1];
                 if (next && windowWidth <= next){
-                    cLog('checkBreakpoint: breakpointsKeys[i] = ', breakpointsKeys[i], 'next = ', next);
                     swiper.currentBreakpoint = breakpointsKeys[i];
                     sortedBreakpoints[i].functions();
                     return true;
                 } else if (!next && swiper.currentBreakpoint !== breakpointsKeys[i]) {
-                    cLog('checkBreakpoint: breakpointsKeys[i] = ', breakpointsKeys[i], 'next = ', next);
                     swiper.currentBreakpoint = breakpointsKeys[i];
                     sortedBreakpoints[i].functions();
                     return true;
                 }
             } 
         };
-        
         return false;
-
     };
 
-
-
-
     function changeClass(mode) {
-        cLog("CustomBreakpoints: changeClass mode =", mode)
+        if (typeof swiper.params.customBreakpoints.mobileClass !== 'string') return false;
         let swiperClasses = swiper.el.classList
         if (mode === 'mobile'){
             if (!swiperClasses.contains(mobileClass)){
@@ -88,11 +52,27 @@ export default function CustomBreakpoints({ swiper, extendParams, on, emit }){
         } else return false;
     };
 
-    function init(){
-        if (!swiper.params.customBreakpoints.enabled) return false;
+    function arrayBreakpoints(){
         for (const key in swiper.params.customBreakpoints.breakpoints){
+            if (typeof parseInt(key) !== 'number'){
+                eLog('CustomBreakpoints: Improper key type passed in for breakpoints. Swiper.params.customBreakpoints.breakpoints requires an object where all keys are numbers.')
+                return false;
+            }
+            if (typeof swiper.params.customBreakpoints.breakpoints[key] !== 'function'){
+                eLog('CustomBreakpoints: Improper value type passed in for breakpoints. Swiper.params.customBreakpoints.breakpoints requires an object where all values are functions.')
+                return false;
+            }
             breakpointsKeys.push(parseInt(key))
         };
+        return true;
+    }
+
+    function init(){
+        if (initialized) return false;
+        if (!arrayBreakpoints()) {
+            swiper.disable();
+            return false;
+        }
         if (breakpointsKeys.length > 1){
             breakpointsKeys.sort()
             for (let i = 0; i < breakpointsKeys.length; i++){
@@ -101,45 +81,38 @@ export default function CustomBreakpoints({ swiper, extendParams, on, emit }){
         };
         swiper.currentBreakpoint = 0;
         mobileClass = swiper.params.customBreakpoints.mobileModeClass;
-        cLog('CustomBreakpoints: init() breakpointsKeys = ', breakpointsKeys, ' sortebBreakpoints = ', sortedBreakpoints, ' swiper.currentBreakpoint = ', swiper.currentBreakpoint)
-        //checkBreakpoint();
+        initialized = true;
+        return true;
     };
 
     function enable(){
-        if (swiper.params.customBreakpoints.enabled) return false;
-        swiper.params.customBreakpoints.enabled = true;
-        cLog('customBreakpoints: enabled');
+        if (swiper.customBreakpoints.enabled) return false;
+        checkBreakpoint();
+        swiper.customBreakpoints.enabled = true;
         return true;
     };
 
     function disable(){
-        cLog('customBreakpoints: disabled');
-        if (!swiper.params.customBreakpoints.enabled) return false;
-        swiper.params.customBreakpoints.enabled = false;
+        if (!swiper.customBreakpoints.enabled) return false;
+        swiper.customBreakpoints.enabled = false;
         return true;
     };
     
     on('resize', () => {
-        cLog('resize')
-        if (swiper.params.customBreakpoints.enabled) {
-            if (checkBreakpoint()){
-                cLog('CustomBreakpoint: new breakpoint', swiper.currentBreakpoint);
-            } else {
-                cLog('CustomBreakpoint: breakpoint unchanged', swiper.currentBreakpoint)
-            }
+        if (swiper.customBreakpoints.enabled) {
+            checkBreakpoint();
         };
     });
 
     on('init', () => {
         if (swiper.params.customBreakpoints.enabled) {
-            cLog('customBreakpoints: init');
             enable();
             init();
         };
     });
 
     on('destroy', () => {
-        if (swiper.params.customBreakpoints.enabled) {
+        if (swiper.customBreakpoints.enabled) {
             disable();
         };
     });
