@@ -13,7 +13,7 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
         spaceBetween: 20,
         slideToClickedSlide: false,
         virtualTranslate: true,
-        
+
         dynamicSwiperHeight: {
           enabled: true,
           slidesPerView: 3,
@@ -31,6 +31,7 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
             0: function(){
               this.params.slidesPerView = 'auto';
               this.params.virtualTranslate = false;
+              this.params.freeMode = true;
               this.dynamicSwiperHeight.disable();
               this.customBreakpoints.changeClass('mobile');
               this.changeDirection('horizontal');
@@ -40,6 +41,7 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
             991: function (){
               this.params.slidesPerView = 1;
               this.params.virtualTranslate = true;
+              this.params.freeMode = false;
               this.dynamicSwiperHeight.enable();
               this.customBreakpoints.changeClass('desktop');
               this.changeDirection('vertical');
@@ -80,8 +82,20 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
           enabled: true,
           swiper: window.contentSwiper,
         },
+
+        customBreakpoints: {
+          enabled: true,
+          breakpoints: {
+            0: function(){
+              this.customThumbs.disable();
+            },
+            991: function(){
+              this.customThumbs.enable();
+            }
+          }
+        },
         
-        modules: [ CustomThumbs ],
+        modules: [ CustomThumbs, CustomBreakpoints ],
       }
     );
   };
