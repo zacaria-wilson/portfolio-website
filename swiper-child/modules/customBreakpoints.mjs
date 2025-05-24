@@ -37,7 +37,7 @@ export default function CustomBreakpoints({ swiper, extendParams, on, emit }){
     };
 
     function changeClass(mode) {
-        if (typeof swiper.params.customBreakpoints.mobileClass !== 'string') return false;
+        if (typeof mobileClass !== 'string') return false;
         let swiperClasses = swiper.el.classList
         if (mode === 'mobile'){
             if (!swiperClasses.contains(mobileClass)){
