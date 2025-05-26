@@ -8,6 +8,10 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
   function initCSwipers(){
     window.contentSwiper = new SwiperChild('.content-swiper',
       {
+        a11y:{
+          slideRole: 'listitem'
+        },
+        keyboard:true,
         spaceBetween: 20,
         slideToClickedSlide: false,
         freeMode: {
@@ -75,6 +79,9 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
     
     window.imageSwiper = new SwiperChild('.image-swiper', 
       {
+        a11y:{
+          slideRole: 'listitem'
+        },
         direction: "vertical",
         spaceBetween: 80, 
         mousewheel: true,

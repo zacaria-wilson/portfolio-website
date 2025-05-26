@@ -9,6 +9,10 @@ import IntersectionControls from '../../swiper-child/modules/intersectionControl
   function initCSwipers(){
     window.contentSwiper = new SwiperChild('.content-swiper',
       {
+        a11y:{
+          slideRole: 'listitem'
+        },
+        keyboard:true,
         spaceBetween: 20,
         
         freeMode: {
@@ -73,6 +77,9 @@ import IntersectionControls from '../../swiper-child/modules/intersectionControl
 
     window.imageSwiper = new SwiperChild('.image-swiper', 
       {
+        a11y:{
+          slideRole: 'listitem'
+        },
         direction: "vertical",
         spaceBetween: 80, 
         slidesPerView: 'auto',
