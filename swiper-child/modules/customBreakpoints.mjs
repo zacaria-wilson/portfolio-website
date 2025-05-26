@@ -3,6 +3,7 @@ import { cLog, eLog } from "../swiper-utils/utils.mjs";
 export default function CustomBreakpoints({ swiper, extendParams, on, emit }){
     extendParams({
         customBreakpoints: {
+            enabled: false,
             mobileModeClass: null,
             breakpoints: {},
         },
@@ -20,17 +21,14 @@ export default function CustomBreakpoints({ swiper, extendParams, on, emit }){
     function checkBreakpoint(){
         let windowWidth = window.innerWidth
         for (let i = 0; i < breakpointsKeys.length; i++){
-            if (windowWidth >= breakpointsKeys[i]){
+            const breakpoint = breakpointsKeys[i];
+            if (windowWidth >= breakpoint && swiper.currentBreakpoint !== breakpoint){
                 let next = breakpointsKeys[i + 1];
-                if (next && windowWidth <= next){
-                    swiper.currentBreakpoint = breakpointsKeys[i];
+                if ((next && windowWidth <= next) || !next){
+                    swiper.currentBreakpoint = breakpoint;
                     sortedBreakpoints[i].functions();
                     return true;
-                } else if (!next && swiper.currentBreakpoint !== breakpointsKeys[i]) {
-                    swiper.currentBreakpoint = breakpointsKeys[i];
-                    sortedBreakpoints[i].functions();
-                    return true;
-                }
+                } 
             } 
         };
         return false;
@@ -79,7 +77,7 @@ export default function CustomBreakpoints({ swiper, extendParams, on, emit }){
                 sortedBreakpoints.push({'functions': swiper.params.customBreakpoints.breakpoints[breakpointsKeys[i]].bind(swiper)});
             };
         };
-        swiper.currentBreakpoint = 0;
+        swiper.currentBreakpoint = -1;
         mobileClass = swiper.params.customBreakpoints.mobileModeClass;
         initialized = true;
         return true;
@@ -87,7 +85,6 @@ export default function CustomBreakpoints({ swiper, extendParams, on, emit }){
 
     function enable(){
         if (swiper.customBreakpoints.enabled) return false;
-        checkBreakpoint();
         swiper.customBreakpoints.enabled = true;
         return true;
     };

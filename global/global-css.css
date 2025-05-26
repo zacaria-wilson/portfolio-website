@@ -2,3 +2,20 @@
   top: -20px;
   overflow: visible;
 }
+.w-lightbox-content{
+  overflow: hidden auto;
+
+  & .w-lightbox-view{
+    height:auto;
+
+    & .w-lightbox-frame{
+      & .w-lightbox-img{
+        max-height: none;
+      }
+    }
+  }
+
+  & .w-lightbox-close{
+    position:fixed;
+  }
+}

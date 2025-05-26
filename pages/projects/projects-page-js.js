@@ -9,30 +9,28 @@ import IntersectionControls from '../../swiper-child/modules/intersectionControl
   function initCSwipers(){
     window.contentSwiper = new SwiperChild('.content-swiper',
       {
-        name: 'content-swiper',
-        direction: 'vertical',
-        slidesPerView: 1,
         spaceBetween: 20,
         slideToClickedSlide: false,
-        virtualTranslate: true,
+
+        freeMode: {
+          sticky: true
+        },
         
         dynamicSwiperHeight: {
-          enabled: true,
           slidesPerView: 3,
         },
 
         customTranslate: {
-          enabled: true,
           offsetStart: 1,
         },
 
         customBreakpoints: {
-          enabled: true,
           mobileModeClass: 'mobile-mode',
           breakpoints: {
             0: function(){
               this.params.slidesPerView = 'auto';
               this.params.virtualTranslate = false;
+              this.params.freeMode.enabled = true;
               this.dynamicSwiperHeight.disable();
               this.customBreakpoints.changeClass('mobile');
               this.changeDirection('horizontal');
@@ -42,11 +40,11 @@ import IntersectionControls from '../../swiper-child/modules/intersectionControl
             991: function (){
               this.params.slidesPerView = 1;
               this.params.virtualTranslate = true;
+              this.params.freeMode.enabled = false;
               this.dynamicSwiperHeight.enable();
               this.customBreakpoints.changeClass('desktop');
               this.changeDirection('vertical');
               this.customTranslate.enable();
-              
             },
           }
         },
@@ -80,13 +78,11 @@ import IntersectionControls from '../../swiper-child/modules/intersectionControl
         slidesPerView: 'auto',
         
         customThumbs: {
-          enabled: true,
           swiper: window.contentSwiper,
           invert: true,
         },
 
         intersectionControls: {
-          enabled: true,
           thumbsScroll: true,
           transitionPoint: window.innerHeight * 0.7,
           observerOptions:{
@@ -95,14 +91,15 @@ import IntersectionControls from '../../swiper-child/modules/intersectionControl
         },
         
         customBreakpoints:{
-          enabled: true,
           breakpoints: {
             0: function(){
+              console.log('ImageSwiper: breakpoint 0');
               this.intersectionControls.disable();
               this.customThumbs.disable();
             },
 
             991: function (){
+              console.log('ImageSwiper: breakpoint 991');
               this.customThumbs.enable()
               this.intersectionControls.enable();
             },

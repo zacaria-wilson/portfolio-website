@@ -8,30 +8,29 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
   function initCSwipers(){
     window.contentSwiper = new SwiperChild('.content-swiper',
       {
-        direction: 'vertical',
-        slidesPerView: 1,
         spaceBetween: 20,
         slideToClickedSlide: false,
-        virtualTranslate: true,
+
+        freeMode: {
+          sticky: true
+        },
 
         dynamicSwiperHeight: {
-          enabled: true,
           slidesPerView: 3,
         },
-
+        
         customTranslate: {
-          enabled: true,
           offsetStart: 1,
         },
-
+        
         customBreakpoints: {
-          enabled: true,
           mobileModeClass: 'mobile-mode',
           breakpoints: {
             0: function(){
+              this.params.allowTouchMove = true;
               this.params.slidesPerView = 'auto';
               this.params.virtualTranslate = false;
-              this.params.freeMode = true;
+              this.params.freeMode.enabled = true;
               this.dynamicSwiperHeight.disable();
               this.customBreakpoints.changeClass('mobile');
               this.changeDirection('horizontal');
@@ -39,9 +38,10 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
             },
 
             991: function (){
+              this.params.allowTouchMove = false;
               this.params.slidesPerView = 1;
               this.params.virtualTranslate = true;
-              this.params.freeMode = false;
+              this.params.freeMode.enabled = false;
               this.dynamicSwiperHeight.enable();
               this.customBreakpoints.changeClass('desktop');
               this.changeDirection('vertical');
@@ -50,10 +50,11 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
           }
         },
 
-        modules: [ DynamicSwiperHeight, CustomTranslate, CustomBreakpoints ],
+        modules: [ DynamicSwiperHeight,  CustomTranslate, CustomBreakpoints],
 
         on:{
           init: function(){
+            this.el.classList.add('mobile-mode');
             try {
                 this.slides.forEach((slide, index) => {
                     const numberEl = slide.querySelector('.project-number');
@@ -67,11 +68,11 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
             } catch (err) {
                 console.error('CustomBullets failed:', err);
             }
-          }
+          },
         },
       }
     );
-
+    
     window.imageSwiper = new SwiperChild('.image-swiper', 
       {
         direction: "vertical",
@@ -79,12 +80,10 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
         mousewheel: true,
         
         customThumbs: {
-          enabled: true,
           swiper: window.contentSwiper,
         },
 
         customBreakpoints: {
-          enabled: true,
           breakpoints: {
             0: function(){
               this.customThumbs.disable();
@@ -98,6 +97,7 @@ import CustomBreakpoints from '../../swiper-child/modules/customBreakpoints.mjs'
         modules: [ CustomThumbs, CustomBreakpoints ],
       }
     );
+  
   };
 
   window.onloadList.push(initCSwipers);
