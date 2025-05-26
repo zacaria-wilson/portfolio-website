@@ -11,8 +11,8 @@ import IntersectionControls from '../../swiper-child/modules/intersectionControl
       {
         spaceBetween: 20,
         slideToClickedSlide: false,
-
         freeMode: {
+          momentumRatio: 0.08,
           sticky: true
         },
         
