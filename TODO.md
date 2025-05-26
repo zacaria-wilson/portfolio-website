@@ -6,4 +6,6 @@
 -  /swiper-child/modules/customBreakpoints.mjs (feature):Add support for synchronizing swiper progress when resizing from desktop to mobile mode.
 - /swiper-child/modules/customTranslate.mjs (feature): add support for inactive slides with different relevant dimensions.
 - /swiper-child/modules/dynamicSwiperHeight.mjs (feature): add support for inactive slides with different relevant dimensions.
-- /swiper-child/modules/intersectionControls.mjs (feature): Add support for main swiper progress, either without `slidesPerView: 'auto'` or unlocking progress.
+- /swiper-child/modules/intersectionControls.mjs (feature): 
+- - Add support for main swiper progress, either without `slidesPerView: 'auto'` or unlocking progress.
+- - Add option to prevent scrollTo() snapping when using 'scroll' param.

@@ -10,7 +10,7 @@ import IntersectionControls from '../../swiper-child/modules/intersectionControl
     window.contentSwiper = new SwiperChild('.content-swiper',
       {
         spaceBetween: 20,
-        slideToClickedSlide: false,
+        
         freeMode: {
           momentumRatio: 0.08,
           sticky: true

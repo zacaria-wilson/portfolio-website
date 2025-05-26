@@ -223,13 +223,13 @@ export default function IntersectionControls({ swiper, extendParams, on, emit })
         return true;
     };
 
-    on('thumbClick', (eventSwiper, event)=> {
+    on('thumbsSlideChange', (eventSwiper, event)=> {
         if (!swiper.intersectionControls.enabled || !swiper.params.intersectionControls.thumbsScroll) return false;
         if (swiper.params.customThumbs && swiper.customThumbs.enabled && swiper.params.customThumbs.invert){
-            scrollTo(parseInt(event.currentTarget.getAttribute('data-hash')));
+            scrollTo(swiper.params.customThumbs.swiper.realIndex);
         };
     });
-
+    
     on('resize', (...args)=> {
         if (!swiper.intersectionControls.enabled) return false;
         resize()
