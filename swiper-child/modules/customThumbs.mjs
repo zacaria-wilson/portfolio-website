@@ -17,16 +17,26 @@ export default function CustomThumbs({ swiper, extendParams, on, emit }){
     let thumbSwiper;
     let controlSwiper;
 
-    function handle(event){
+    function clickHandle(event){
         controlSwiper.slideTo(parseInt(event.currentTarget.getAttribute('data-hash')));
-        emit('thumbClick', event);
+        
     };
+
+    function slideChangeHandle(...args){
+        swiper.slideTo(thumbSwiper.realIndex);
+        emit('thumbsSlideChange', ...args);
+    }
 
     function events(method){
         if (thumbSwiper){
             thumbSwiper.slides.forEach((slide) => {
-                slide[method]('click', handle)
+                slide[method]('click', clickHandle)
             })
+            if (method === 'addEventListener'){
+                thumbSwiper.on('slideChange', slideChangeHandle);
+            } else if(method === 'removeEventListener'){
+                thumbSwiper.off('slideChange', slideChangeHandle);
+            }
         } else {eLog('Error: CustomThumbs thumbSwiper missing')}
     };
 
